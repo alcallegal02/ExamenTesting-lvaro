@@ -6,7 +6,7 @@
     <title>Welcome</title>
 </head>
 <body>
-    <h1>Welcome, {!! session('user')->name !!}</h1>
+    <h1><h1>Welcome, {{ session('user')->name }}</h1></h1>
     <p>This page is intentionally vulnerable to <strong>Cross-Site Scripting (XSS)</strong>. 
         If the user's name contains HTML or JavaScript code, it will be rendered and executed in the browser.</p>
     

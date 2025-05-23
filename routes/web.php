@@ -29,15 +29,13 @@ Route::get('/insecure-login', function () {
 })->name('insecure-login');
 
 Route::post('/insecure-login', function (Request $request) {
-    
     $email = $request->input('email');
     $password = $request->input('password');
-    
-    
-    $user = DB::select("SELECT * FROM users WHERE email = '$email' AND password = '$password'");
 
-    if ($user) {
-        Session::put('user', (object) $user[0]);
+    $user = DB::table('users')->where('email', $email)->first();
+
+    if ($user && Hash::check($password, $user->password)) {
+        Session::put('user', $user);
         return redirect('/insecure-welcome');
     }
 

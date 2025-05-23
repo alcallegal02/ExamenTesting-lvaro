@@ -11,7 +11,7 @@
 
     <form method="POST" action="/insecure-login">
         @csrf
-        <label>Email: <input type="text" name="email"></label><br>
+        <label>Email: <input type="email" name="email"></label><br>
         <label>Password: <input type="text" name="password"></label><br>
         <button type="submit">Login</button>
         <a class="button" href="/">Back home</a>

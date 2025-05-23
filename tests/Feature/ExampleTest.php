@@ -1,4 +1,7 @@
 <?php
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
 
 it('returns a successful response', function () {
     $response = $this->get('/');
@@ -6,21 +9,18 @@ it('returns a successful response', function () {
     $response->assertStatus(200);
 });
 
-// Test creación usuario
-it('creates a user', function () {
-    $response = $this->post('/users', [
-        'name' => '<script>alert("XSS")</script>',
-        'email' => 'test@example.com',
-        'password' => 'password',
+it('No es vulnerable a SQL Injection', function () {
+    $response = $this->post('/insecure-login', [
+        'email' => "' OR 1 -- -",
+        'password' => "12345",
     ]);
-    $response->assertStatus(201);
+
+    $response->assertStatus(302);
 });
 
-// Test login usuario - Prueba de SQLi
-it('logs in a user', function () {
-    $response = $this->post('/login', [
-        'email' => "' OR '1'='1' -- ",
-        'password' => 'password',
-    ]);
-    $response->assertStatus(200);
+it('No es vulnerable a XSS', function () {
+    Session::put('user', ['name' => '<script>alert("XSS")</script>']);
+
+    $this->get('/insecure-welcome')
+         ->assertSee(htmlspecialchars('<script>alert("XSS")</script>'), false);
 });
